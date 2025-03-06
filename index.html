@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wei Tseu - Link Tree</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #f3e7ff 0%, #ffe7f9 100%);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-pic {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .profile h1 {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .profile p {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .link {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.1);
+        }
+
+        .link-icon {
+            color: #6b46c1;
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .link-content {
+            flex-grow: 1;
+        }
+
+        .link h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .link p {
+            margin: 5px 0 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Email copy button styles */
+        .email-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        .email-address {
+            font-size: 0.9rem;
+            color: #6b46c1;
+            font-weight: 500;
+        }
+
+        .copy-btn {
+            background-color: #6b46c1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 0.56rem;
+            display: none;
+        }
+
+        .copy-btn:hover {
+            background-color: #553c9a;
+        }
+
+        .email-shown .contact-text {
+            display: none;
+        }
+
+        .email-shown .email-container {
+            display: flex;
+        }
+
+        .email-shown .copy-btn {
+            display: block;
+        }
+
+        .email-container {
+            display: none;
+        }
+
+        .copy-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .copy-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile">
+            <h1>WEI TSEU</h1>
+            <p>@Imperial College</p>
+            <p>Algebraic Geometry and Representation Theory</p>
+        </div>
+
+        <div class="links">
+            <a href="http://arxiv.org/a/tseu_w_1" class="link">
+                <i data-feather="archive" class="link-icon"></i>
+                <div class="link-content">
+                    <h2>Arxiv</h2>
+                    <p>Check out my preprints</p>
+                </div>
+            </a>
+
+            
+            <div class="link" id="email-link">
+                <i data-feather="mail" class="link-icon"></i>
+                <div class="link-content">
+                    <h2>Email</h2>
+                    <p class="contact-text">Get in touch</p>
+                    <div class="email-container">
+                        <span class="email-address">weitseu@gmail.com</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+
+        <footer>
+            <p>© <span id="year"></span> Wei Tseu. All rights reserved.</p>
+        </footer>
+
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+    </div>
+
+
+    <div class="copy-message" id="copy-message">Email copied to clipboard!</div>
+
+    <script>
+        // Initialize Feather Icons
+        feather.replace();
+
+        // Email copy functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailLink = document.getElementById('email-link');
+            const copyBtn = document.querySelector('.copy-btn');
+            const emailAddress = document.querySelector('.email-address').textContent;
+            const copyMessage = document.getElementById('copy-message');
+
+            emailLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.classList.toggle('email-shown');
+            });
+
+            copyBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Copy to clipboard
+                navigator.clipboard.writeText(emailAddress).then(function() {
+                    // Show copy message
+                    copyMessage.classList.add('show');
+                    
+                    // Hide message after 2 seconds
+                    setTimeout(function() {
+                        copyMessage.classList.remove('show');
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
